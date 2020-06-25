@@ -88,11 +88,16 @@ namespace StarChart.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CelestialObject celestialObject)
+        public IActionResult Create([FromBody]CelestialObject celestialObject)
         {
             _context.CelestialObjects.Add(celestialObject);
-            var newCelestialObjectId = _context.SaveChanges();
-            return CreatedAtRoute(routeName: "GetById", new {Id = newCelestialObjectId});
+
+            int? newCelestialObjectId = _context.SaveChanges();
+            if (newCelestialObjectId == null)
+            {
+                throw new ArgumentNullException("celestialObject was not added");
+            }
+            return CreatedAtRoute(routeName: "GetById", new { id = newCelestialObjectId });
         }
 
         [HttpPut("{id}")]
@@ -100,7 +105,7 @@ namespace StarChart.Controllers
         {
             var matchingCelestialObject = _context
                 .CelestialObjects
-                .First(co => co.Id == id);
+                .FirstOrDefault(co => co.Id == id);
 
             if (matchingCelestialObject == null)
             {
@@ -122,7 +127,7 @@ namespace StarChart.Controllers
         {
             var matchingCelestialObject = _context
                 .CelestialObjects
-                .First(co => co.Id == id);
+                .FirstOrDefault(co => co.Id == id);
 
             if (matchingCelestialObject == null)
             {
