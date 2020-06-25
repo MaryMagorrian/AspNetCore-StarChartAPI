@@ -39,7 +39,7 @@ namespace StarChart.Controllers
             return Ok(firstMatchingCelestialObject.First());
         }
 
-        [HttpGet("name")]
+        [HttpGet("{name}")]
         public IActionResult GetByName(string name)
         {
             var allMatchingCelestialObjects = _context
